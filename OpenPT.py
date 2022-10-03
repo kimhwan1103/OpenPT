@@ -1,13 +1,14 @@
 #필수 라이브러리 임포트 
-from unittest import result
 import cv2
 import mediapipe as mp
 import numpy as np
 import math
+import util
 
 class opt():
     def __init__(self, cap):
-        self. cap = cap
+        self.cap = cap
+        self.results = []
 
     def points(self):
         mp_holistic = mp.solutions.holistic
@@ -23,10 +24,15 @@ class opt():
                     
                     img.flags.writeable = False
                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                    results = holistic.process(img)
-                    return results
+                    self.results = holistic.process(img)
+                    return self.results
 
-    
+    def FacePopints(self):
+        face = self.results.face_landmarks
+
+    def BodyPoints(self):
+        body = self.results.pose_landmarks
+
     
     def splitPoint(point):
         return int(point.x, point.y)
@@ -58,5 +64,3 @@ class opt():
 
         print(ratio)
         return ratio
-    
-    def 
