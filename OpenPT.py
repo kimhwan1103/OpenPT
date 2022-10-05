@@ -4,6 +4,7 @@ import mediapipe as mp
 import numpy as np
 import math
 import util
+from PIL import ImageTk, Image
 
 class opt():
     def __init__(self, cap):
@@ -64,3 +65,52 @@ class opt():
 
         print(ratio)
         return ratio
+
+    def FaceRotaion(self):
+        ret, img = self.cap.read()
+        size = img.shape
+        image_points_2D = np.array([
+            (self.results.face_landmark[1].x, self.results.face_landmark[1].y),
+            (self.results.face_landmark[152].x, self.results.face_landmark[152].y),
+            (self.results.face_landmark[23].x, self.results.face_landmark[23].y),
+            (self.results.face_landmark[253].x, self.results.face_landmark[253].y),
+            (self.results.face_landmark[61].x, self.results.face_landmark[61].y),
+            (self.results.face_landmark[62].x, self.results.face_landmark[62].y)
+        ], dtype="double")
+
+        figure_points_3D = np.array([
+            (0.0, 0.0, 0.0),
+            (0.0, -330.0, -65.0),
+            (-225.0, 170.0, -135.0),
+            (225.0, 170.0, -135.0),
+            (-150.0, -150.0, -125.0),
+            (150.0, -150.0, -125.0)
+        ])
+
+        distortion_coeffs = np.zeros((4,1))
+        focal_length = size[1]
+        center = (size[1]/2, size[0]/2)
+        matrix_cmara = np.array(
+            [[focal_length, 0, center[0]],
+            [0, focal_length, center[1]],
+            [0, 0, 1]], dtype = "double"
+        )
+
+        sucess, vector_rotation, vector_translation = cv2.solvePnP(figure_points_3D, image_points_2D, matrix_cmara, distortion_coeffs, flags=0)
+        nose_end_point2D, jacobian = cv2.projectPoints(np.array([0.0, 0.0, 1000.0]), vector_rotation, vector_translation, matrix_cmara, distortion_coeffs)
+        
+        rmat, jac = cv2.Rodrigues(vector_rotation)
+        angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
+
+        return Qx, Qy, Qz
+
+    def mouthOpen(self):
+        print("제작중")    
+    
+    def output(self):
+        ret, frame = self.cap.read()
+        img = Image.fromarray(frame)
+        imgtk = ImageTk.PhotoImage(image=img)
+        
+        return imgtk
+        

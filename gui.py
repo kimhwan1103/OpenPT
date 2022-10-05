@@ -1,8 +1,7 @@
-from sre_parse import State
 import tkinter
 import OpenPT
 import cv2
-
+import threading
 
 #OpenPT에서 데이터 처리값을 불러오는 클래스
 class DtoG():
@@ -20,13 +19,15 @@ class DtoG():
 #GUI및 전체적인 서비스 관리 클래스 
 class Main():
     def __init__(self):
+        threading.Thread.__init__(self)
         self.window = tkinter.Tk()
         #self.opt = OpenPT.opt(cap)
         self.window.title("OpenPT Beta")
-        self.window.geometry("640x400+100+100")
+        self.window.geometry("1280x720+100+100")
         self.window.resizable(False, False) 
         self.results = DtoG().getState()  
         self.engineState = False
+        self.LogStr = ""
     
     def StateView(self):
         #좌표들 불러오기 
@@ -68,6 +69,20 @@ class Main():
         connectIPlabel = tkinter.Label(self.window, text="IP: {0} | PORT: {1}".format(ip.get(), port.get()))
         connectIPlabel.place(x=50, y=280)
         
+    def LogView(self):
+        logLabel = tkinter.Label(self.window, text="Log", fg="red")
+        logLabel.place(x=50, y=310)
+        logEntryset = tkinter.Entry(self.window, state='readonly', readonlybackground="white", width=20)
+        logEntryset.insert(0, self.LogStr)
+        logEntryset.place(x=50, y=330)
+
+    def ImageView(self):
+        imageLabel = tkinter.Label(self.window, text="OutPut")
+        imageLabel.place(x=650, y=50)
+        camera = opt.output()
+        imageLabel2 = tkinter.Label(self.window, image=camera)
+        imageLabel2.image = camera
+        imageLabel2.place(x=650, y=100)
 
     #메인뷰
     def MainView(self):
@@ -81,6 +96,8 @@ class Main():
         bodyLabel.place(x=50, y=150)
         self.StateView()
         self.NetView()
+        self.LogView()
+        self.ImageView()
         self.window.mainloop()
 #메인 클래스 실행 
 cap = cv2.VideoCapture(0)
