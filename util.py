@@ -2,6 +2,7 @@ from asyncio import subprocess
 import os
 import numpy as np 
 import math 
+import tkinter
 
 class util():
     def __init__(self):
@@ -20,9 +21,6 @@ class util():
 
     def euclidean_distance(point1, point2):
         return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
-
-    def GetLog(self, LogText):
-        return LogText
 
     def LogCommand(self, Command):
         print("만드는 중")
@@ -43,3 +41,17 @@ class util():
         p.stastus = p.wait()
         response = output.decode('utf-8')
         return response.replace('\n', '')
+
+class GUIUtill(object):
+    def __init__(self, master):
+        self.master = master
+
+    def GetLog(self, data):
+        return data
+
+    def LogView(self):
+        logLabel = tkinter.Label(self.master, text="Log", fg="red")
+        logLabel.place(x=50, y=310)
+        logEntryset = tkinter.Entry(self.master, state="readonly", readonlybackground="white", width=100)
+        logEntryset.insert(0, str(self.GetLog))
+        logEntryset.place(x=50, y=330)
