@@ -64,7 +64,7 @@ class Main(object):
         portbox.place(x=320, y=200)
         button = tkinter.Button(self.master, text="sbumit")
         button.place(x=50, y=230)
-        self.NetButton(ip, port)
+        #self.NetButton(ip, port)
         
         #connect 부분
         connectlabel = tkinter.Label(self.master, text="Connect Engine")

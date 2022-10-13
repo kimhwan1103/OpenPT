@@ -1,5 +1,4 @@
 #필수 라이브러리 임포트 
-from unittest import result
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -32,7 +31,7 @@ class opt():
 
     def FacePopints(self):
         face = self.results.face_landmarks
-
+    
     def BodyPoints(self):
         body = self.results.pose_landmarks
 
@@ -49,6 +48,8 @@ class opt():
     def NewEyeTracking(self):
         #print("눈 감지 함수 작동시작...")
         #right eye points
+        L_state = False
+        R_state = False
         results = self.points()
         p_corner_left_x, p_corner_left_y = results.face_landmarks.landmark[362].x, results.face_landmarks.landmark[362].y
         p_corner_right_x, p_corner_right_y = results.face_landmarks.landmark[359].x, results.face_landmarks.landmark[359].y
@@ -95,11 +96,24 @@ class opt():
 
         #눈값 조절 추천 값 왼쪽 3.5 오른쪽 3.0 
 
+        '''
         if L_ratio > 3.5:
             print("value : {0} blank".format(L_ratio))
         else:
             print("value : {0} Not blank".format(L_ratio))
-        #return ratio
+        '''
+
+        if L_ratio > 3.5:
+            L_ratio = True
+        else:
+            L_ratio = False
+        
+        if R_state >3.0:
+            R_state = True
+        else:
+            R_state = False
+
+        return L_state, R_state
 
     def FaceRotaion(self):
         results = self.points()
@@ -141,7 +155,8 @@ class opt():
 
         #print("x : {0} | y : {1} | z : {2}".format(Qx, Qy, Qz))
         print("angles : {0}".format(angles))
-        #return Qx, Qy, Qz
+
+        return angles
 
     def mouthOpen(self):
         print("제작중")    
@@ -153,3 +168,7 @@ class opt():
         
         return imgtk
         
+    def bodypoint(self):
+        points = self.points()
+
+        print(points.pose_landmarks)

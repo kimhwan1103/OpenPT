@@ -3,8 +3,10 @@ import os
 import numpy as np 
 import math 
 import tkinter
+import json 
 
 class util():
+    '''
     def __init__(self):
         self.point_x
         self.point_y
@@ -21,7 +23,7 @@ class util():
 
     def euclidean_distance(point1, point2):
         return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
-
+    '''
     def LogCommand(self, Command):
         print("만드는 중")
 
@@ -41,6 +43,18 @@ class util():
         p.stastus = p.wait()
         response = output.decode('utf-8')
         return response.replace('\n', '')
+    
+    def json():
+
+        json_string = '''{
+            "id" : 1,
+            "eyes" : {
+                "Leye" : ,
+                "Reye" : ,
+            },
+        }
+        '''
+        return json_string
 
 class GUIUtill(object):
     def __init__(self, master):
